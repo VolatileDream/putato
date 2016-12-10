@@ -19,6 +19,8 @@ class Storage(object):
     def transaction(self):
         """Generates a single use context manager to make edits to the contents
         of the database."""
+        if self.state is State.Running:
+            raise RuntimeError("Can not have two simultaneous transactions.")
         return Transaction(self)
 
     def table(self, table_name):
