@@ -105,9 +105,9 @@ class Table(object):
 
     def list(self):
         """Returns a generator that lists all the keys in the table."""
-        self.cursor.execute('SELECT key FROM %s;' % self.table)
+        self.cursor.execute('SELECT key, value FROM %s;' % self.table)
         for result in self.cursor:
-            yield(result[0])
+            yield(result[0], result[1])
 
 
 class RollbackTransaction(Exception):
@@ -165,7 +165,7 @@ if __name__ == "__main__":
         db = get_db()
         table = get_table()
         with get_db().transaction():
-            for key in table.list():
+            for (key, value) in table.list():
                 if key is not None:
                     print(key)
 
