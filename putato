@@ -76,15 +76,15 @@ class Transaction(object):
 class Table(object):
 
     def __init__(self, table_name, db, cursor):
-        self.table = table_name
+        self.name = table_name
         self.db = db
         self.cursor = cursor
-        self.cursor.execute('CREATE TABLE IF NOT EXISTS %s ( key TEXT PRIMARY KEY ON CONFLICT REPLACE, value BYTES );' % self.table)
+        self.cursor.execute('CREATE TABLE IF NOT EXISTS %s ( key TEXT PRIMARY KEY ON CONFLICT REPLACE, value BYTES );' % self.name)
 
     def get(self, key):
         """Retrieves a key from the table. Returns the value, or None if no
         value is found."""
-        self.cursor.execute('SELECT value FROM %s WHERE key = ?;' % self.table, (key,))
+        self.cursor.execute('SELECT value FROM %s WHERE key = ?;' % self.name, (key,))
         value = self.cursor.fetchone()
         if value:
             return value[0]
@@ -95,17 +95,17 @@ class Table(object):
         """Overwrites the current value of the key, or adds it."""
         self.db.require_running(
             "table.put() can only be invoked in transaction")
-        self.cursor.execute('INSERT INTO %s (key, value) VALUES (?,?)' % self.table, (key,value))
+        self.cursor.execute('INSERT INTO %s (key, value) VALUES (?,?)' % self.name, (key,value))
 
     def remove(self, *keys):
         """Deletes a key from the table. Does nothing if they key does not exist."""
         self.db.require_running(
             "table.remove() can only be invoked in transaction")
-        self.cursor.execute('DELETE FROM %s WHERE key = ?;' % self.table, keys)
+        self.cursor.execute('DELETE FROM %s WHERE key = ?;' % self.name, keys)
 
     def list(self):
         """Returns a generator that lists all the keys in the table."""
-        self.cursor.execute('SELECT key, value FROM %s;' % self.table)
+        self.cursor.execute('SELECT key, value FROM %s;' % self.name)
         for result in self.cursor:
             yield(result[0], result[1])
 
