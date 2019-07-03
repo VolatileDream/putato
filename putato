@@ -162,7 +162,6 @@ if __name__ == "__main__":
 
     @nb.command("list", short_help="List all keys in the database")
     def list_items():
-        db = get_db()
         table = get_table()
         with get_db().transaction():
             for (key, value) in table.list():
@@ -172,7 +171,6 @@ if __name__ == "__main__":
     @nb.command("get", short_help="fetchs the keys requested, in order, and prints them one per line")
     @click.argument("keys", nargs = -1)
     def get_items(keys):
-        db = get_db()
         table = get_table()
         with get_db().transaction():
             for key in keys:
@@ -185,7 +183,6 @@ if __name__ == "__main__":
     @nb.command("put", short_help="sets the specified key to the supplied value, overwrites existing entries")
     @click.argument("args", nargs = 2)
     def put_items(args):
-        db = get_db()
         table = get_table()
         with get_db().transaction():
             table.put(*args)
@@ -193,7 +190,6 @@ if __name__ == "__main__":
     @nb.command("remove", short_help="deletes a key")
     @click.argument("keys", nargs = -1)
     def remove_items(keys):
-        db = get_db()
         table = get_table()
         with get_db().transaction():
             for key in keys:
