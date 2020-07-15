@@ -153,7 +153,7 @@ if __name__ == "__main__":
         with get_db().transaction():
             while True:
                 line = sys.stdin.readline()
-                if line is "":
+                if line == "":
                     break
                 line = line.strip()
                 cmd, *args = line.split(" ")
